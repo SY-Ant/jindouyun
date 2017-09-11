@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+  <style>
+    #share {
+      position: fixed;
+      width: 100px;
+      height: 200px;
+      background-color: lightblue;
+      left: -100px;
+      top: 100px;
+    }
+    
+    #share span {
+      width: 20px;
+      height: 60px;
+      line-height: 20px;
+      text-align: center;
+      left: 100px;
+      top: 70px;
+      position: absolute;
+      background-color: yellow;
+      
+    }
+  </style>
+
+</head>
+<body>
+<div id="share">
+  <span>分享到</span>
+</div>
+<script>
+  //需求
+  //1.鼠标移入盒子出来    考虑到动画 左侧距离为零
+  //2.鼠标移出，盒子收回，盒子左侧距离为
+
+  //获取元素
+  var share=document.getElementById("share");
+  var span =share.children[0];
+
+  share.onmouseover=function() {
+    animate(share,{left:0})
+  }
+  share.onmouseout=function() {
+    animate(share,{left:-100})
+  }
+
+
+  //涉及到属性的改变
+  function  animate(element,datas,fn) {
+    clearInterval(element.timer);
+    element.timer=setInterval(function() {
+      var flag=true;
+      for(var k in datas) {
+        var styleName=k;
+        var target=datas[k];
+        var current=parseInt(getStyle(element,styleName))||0;
+        var step=(target-current)/10;
+        step=step>0?Math.ceil(step):Math.floor(step);
+        current=current+step;
+        element.style[styleName]=current+"px";
+        if(current!=target) {
+          flag=false;
+        }
+      }
+      if(flag){
+        clearInterval(element.timer);
+        if(typeof fn=="function") {
+          fn();
+        }
+      }
+    },20)
+
+  }
+
+
+  //
+  function  getStyle(element,styleName) {
+    if(element.currentStyle) {
+      return element.currentStyle[styleName];
+    }else {
+      return getComputedStyle(element,null)[styleName]
+    }
+  }
+</script>
+</body>
+</html>
